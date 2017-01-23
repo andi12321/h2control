@@ -5,17 +5,23 @@ CFLAGS = -m32 $(INCLUDES)
 
 #include Makefile.i
 # makefile to build ex4
+#-nostartfiles
+
 
 NAME = comb
 
-SOURCE = comb.c
+SOURCE = src/comb.c
 
 LIBS = \
   -lad4
 
+#SRCDIR := src
+#BUILDDIR := build
+#TARGET := bin/h2c
+#SRCEXT := c
 
 
-OBJECTS = $(SOURCE:.c=.o)
+#OBJECTS = $(SOURCE:.c=.o)
 
 all: $(NAME)
 
@@ -25,3 +31,4 @@ clean:
 $(NAME): $(OBJECTS)
 	@echo "### Please double check that libad4.so is installed, if linking should fail..."
 	$(CC) $(CFLAGS) -o $@ $^ -lad4 -lm -lncurses
+

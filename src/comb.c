@@ -91,7 +91,7 @@ int main ()
   rc = ad_get_dev_info(adh,&devinfo);
   attron(COLOR_PAIR(2));
   cnt=devinfo.analog_in;
-  printw ("%u\n ",devinfo.analog_in);
+  printw ("%u x \n ",devinfo.analog_in);
   printw ("%u\n ",devinfo.analog_out);
   printw ("%u\n ",devinfo.digital_io);
   printw ("%u\n ",devinfo.can);

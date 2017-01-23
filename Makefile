@@ -8,17 +8,19 @@ SRCDIR := src
 BUILDDIR := build
 TARGET := bin/h2c
 #  
-SRCEXT := cpp
+SRCEXT := c
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g # -Wall
+CFLAGS := -m32 # -Wall
 # LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
+LIBS = \
+  -lad4
 LIB := -lad4 -lm -lncurses
-INC := -I include
+INC := -I../../include
 
 $(TARGET): $(OBJECTS)
 	  @echo " Linking..."
-	    @echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+	    @echo " $(CC) $(CFLAGS) $^ -o $(TARGET) $(LIB)"; $(CC) $(CFLAGS) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	  @mkdir -p $(BUILDDIR)
