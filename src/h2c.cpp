@@ -1,3 +1,4 @@
+/* h2c.cpp  */
 #include "binchange.h"
 #include "hsteuerung.h"
 
