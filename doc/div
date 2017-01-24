@@ -1,0 +1,4 @@
+This is what the makefile should produce:
+cc -m32 -I../../include   -c -o build/comb.o src/comb.c
+### Please double check that libad4.so is installed, if linking should fail...
+cc -m32 -I../../include -o bin/h2c build/comb.o -lad4 -lm -lncurses
