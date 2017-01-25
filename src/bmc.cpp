@@ -9,7 +9,7 @@ library für Steuerungs-relevante Funktionen
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
-#include "libad.h"
+#include "libad/libad.h"
 #include <ncurses.h>
 #include "binchange.h"
 
