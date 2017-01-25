@@ -1,5 +1,5 @@
 /*
-hsteuerung.h
+bmc.cpp
 library für Steuerungs-relevante Funktionen
 */
 
@@ -11,12 +11,8 @@ library für Steuerungs-relevante Funktionen
 #include <errno.h>
 #include "libad.h"
 #include <ncurses.h>
+#include "binchange.h"
 
-void initiate_screen();
-int usage();
-int refresh_val(int32_t ,int32_t ,uint32_t ,float *);
-int refresh_out(int, bool *,uint32_t ,int );
-int menu();
 
 void initiate_screen()
 {

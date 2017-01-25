@@ -1,7 +1,13 @@
 /* h2c.cpp  */
 #include "binchange.h"
-#include "hsteuerung.h"
-
+#include "bmc.h"
+//#include <stdio.h>
+#include <stdlib.h>
+//#include <string.h>
+//#include <ctype.h>
+#include <errno.h>
+#include "libad.h"
+#include <ncurses.h>
 
 
 /*
@@ -38,7 +44,8 @@ int main(int argc, char *argv[])
 int main ()
 //int main (int argc, char *argv[])
 {
-  char *driver;
+  //char *driver;
+  const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
   int i=0,bef=0,state[15],chdi=0;
   int32_t adh=0, rc=0;
   uint32_t data=0, dataout=0, rng=3;
@@ -68,7 +75,6 @@ int main ()
     exit(1);
   }
 */
-  driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
 
   adh = ad_open(driver);
 
@@ -92,7 +98,7 @@ int main ()
   rc = ad_get_dev_info(adh,&devinfo);
   attron(COLOR_PAIR(2));
   cnt=devinfo.analog_in;
-  printw ("%u cpp \n ",devinfo.analog_in);
+  printw ("%u\n ",devinfo.analog_in);
   printw ("%u\n ",devinfo.analog_out);
   printw ("%u\n ",devinfo.digital_io);
   printw ("%u\n ",devinfo.can);
