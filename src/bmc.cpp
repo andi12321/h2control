@@ -54,7 +54,7 @@ int usage ()
   return 0;
 }
 
-
+#if 0
 //		gelesene Werte aus Analog IN schreiben
 int refresh_val (int32_t rc,int32_t adh,uint32_t data,float u[])
 {
@@ -62,7 +62,7 @@ int i=0,x=0,y=0;
 int32_t cha=0;
 uint32_t rng=3;
 
-  
+ 
   mvprintw (0,0,"Analog IN");
 
   for (i=0; i<=15;i++)
@@ -98,7 +98,9 @@ uint32_t rng=3;
 
   return 0;
 }
+#endif
 
+#if 0
 //		Digitale Ausgänge schreiben/aktualisieren
 int refresh_dout (int bef, int state[],uint32_t dataout, int chdi)
 {
@@ -122,3 +124,4 @@ else  state[bef-48]=0;
 	//printw("RC: %d\n ",rc);
   return 0;
 }
+#endif

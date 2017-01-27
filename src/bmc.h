@@ -17,10 +17,10 @@ library für Steuerungs-relevante Funktionen
 
 void initiate_screen();
 int usage();
-int refresh_val(int32_t ,int32_t ,uint32_t ,float *);
-int refresh_dout (int bef, int state[],uint32_t dataout, int chdi);
+//int refresh_val(int32_t ,int32_t ,uint32_t ,float *);
+//int refresh_dout (int bef, int state[],uint32_t dataout, int chdi);
 //int refresh_dout(int, bool *,uint32_t ,int );
 //int refresh_dout(int, int,uint32_t , int);
-int menu();
+//int menu();
 
 #endif
