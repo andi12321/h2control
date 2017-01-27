@@ -95,9 +95,11 @@ int main ()
 //  initiate_screen();
   
   //cha=1;
+
+#if 0
   rc = ad_get_dev_info(adh,&devinfo);
   attron(COLOR_PAIR(2));
-  cnt=devinfo.analog_in;
+   cnt=devinfo.analog_in;
   printw ("%u\n ",devinfo.analog_in);
   printw ("%u\n ",devinfo.analog_out);
   printw ("%u\n ",devinfo.digital_io);
@@ -105,8 +107,11 @@ int main ()
   printw ("%u\n ",devinfo.counter);
   printw ("Press any key to start\n");
   getch();
+#endif
+
 //---------------File handling ------------
 
+#if 0
    static const char filename[] = "doc/h2_config";
    FILE *file = fopen ( filename, "r" );
    if ( file != NULL )
@@ -137,6 +142,7 @@ int main ()
   //fclose(fp);
   printw ("Press any key to continue\n");
   getch();
+#endif
 
 
 //-----------------------------------------
@@ -161,7 +167,8 @@ int main ()
         attron(COLOR_PAIR(3));
         refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (hsteuerung.h)
         attroff(COLOR_PAIR(3));
-	printw("%d",bef);
+	move(18,0);
+	printw("Key-Code: %d",bef);
 	if (bef == 'm') // press m for menu
 		{
 		 menu();

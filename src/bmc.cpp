@@ -82,7 +82,7 @@ uint32_t rng=3;
       else
         printw("Fail\n");
     }
-
+#if 0
   mvprintw (20,0,"+--- V1 --- M1 ---< Elektrolyseur\n\
 |\n\
 |\n\
@@ -93,6 +93,7 @@ uint32_t rng=3;
 |\n\
 |\n\
 +--- V4 --- M4 ---< Brennstoffzelle\n");
+#endif
 
   return 0;
 }
