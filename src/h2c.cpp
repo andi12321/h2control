@@ -1,6 +1,6 @@
 /* h2c.cpp  */
 #include "binchange.h"
-#include "bmc.h"
+//#include "bmc.h"
 //#include <stdio.h>
 #include <stdlib.h>
 //#include <string.h>
@@ -10,11 +10,12 @@
 #include <ncurses.h>
 
 
-
-int main ()
-int menu()
-int refresh_val (int32_t rc,int32_t adh,uint32_t data,float u[])
-int refresh_dout (int bef, int state[],uint32_t dataout, int chdi)
+#if 0
+int main();
+int menu();
+int refresh_val (int32_t rc,int32_t adh,uint32_t data,float u[]);
+int refresh_dout (int bef, int state[],uint32_t dataout, int chdi);
+#endif
 
 /*
 int main(int argc, char *argv[])
@@ -46,6 +47,80 @@ int main(int argc, char *argv[])
 }
 */
 
+int menu()
+{
+  char mbef;
+  mvprintw(0,50,"--MENU--");
+  mvprintw(1,60,"Hydrogenation-Cycle program [h]");
+  mvprintw(2,60,"pressure-program (empty)");
+  mvprintw(3,60,"practical demonstration (empty)");
+  while((mbef=getch()) != 10){
+	  if (mbef == 'h'){
+		  //hydrogenation;
+		  mvprintw(4,60,"pressed h");
+
+		  break;
+		  }
+	  }
+  // hier gehört dann ein getch her!!
+return 0;
+}
+
+//		gelesene Werte aus Analog IN schreiben
+int refresh_val (int32_t rc,int32_t adh,uint32_t data,float u[])
+{
+  int i=0,x=0,y=0;
+  int32_t cha=0;
+  uint32_t rng=3;
+  mvprintw (0,0,"Analog IN");
+
+  for (i=0; i<=15;i++)
+    {
+      cha = i;
+      rc = ad_discrete_in(adh, AD_CHA_TYPE_ANALOG_IN|cha, rng, &data);
+      if (rc == 0)
+        rc = ad_sample_to_float (adh, AD_CHA_TYPE_ANALOG_IN|cha, rng, data, &u[i]);
+      if (rc == 0)
+      {
+	getyx(stdscr,y,x);
+        mvprintw (i+1,0,"cha %2d:", cha);
+	attron(A_BOLD);
+        mvprintw (i+1,10,"%7.3f V", u[i]);
+	attroff(A_BOLD);
+      }
+
+      else
+        printw("Fail\n");
+    }
+
+
+  return 0;
+}
+
+//		Digitale Ausgänge schreiben/aktualisieren
+int refresh_dout (int bef, int state[],uint32_t dataout, int chdi)
+{
+int rc=0,adh=0,i=0, key;
+
+mvprintw (0,20,"Digital OUT");
+if (state[bef-97]==0) state[bef-97]=1;
+else  state[bef-97]=0;
+	//for (i=0;i<=15;i++) printw("%d",state[i]);
+	//printw("\n");
+	dataout=btoi(state);
+        //printw("Bef: %d\n",bef);
+	//printw("\n");
+	//printw("Dataout: %d\n",dataout);
+        rc = ad_discrete_out(adh,AD_CHA_TYPE_DIGITAL_IO|chdi,0,dataout);
+        for (i=0; i<=15;i++) 
+	{ 
+	  key = i + 65;
+	  if (state[i]==0) mvprintw (i+1,20,"Channel %1c: %d\n",(char) key, state[i]);
+	  if (state[i]==1) mvprintw (i+1,20,"Channel %1c: %d ON", (char) key, state[i]);
+	}
+	//printw("RC: %d\n ",rc);
+  return 0;
+}
 
 int main ()
 //int main (int argc, char *argv[])
@@ -164,7 +239,7 @@ int main ()
 */
 
   timeout(1000); // ein mal pro Sekunde:
-  while((bef = getch()) != 10)
+  while((bef = getch()) != 27)
     {
         move(0,0);
         attron(COLOR_PAIR(2));
@@ -175,8 +250,8 @@ int main ()
         attroff(COLOR_PAIR(3));
 	move(18,0);
 	printw("Key-Code: %d",bef);
-	mvprintw(19,0,"%7.3f",u[2]);
-	if (bef == 'm') // press m for menu
+	//mvprintw(19,0,"%7.3f",u[2]);
+	if (bef == 32) // press m for menu
 		{
 		 menu();
 		}
@@ -194,76 +269,3 @@ int main ()
   return 23;
 }
 
-int menu()
-{
-  char mbef;
-  mvprintw(0,50,"--MENU--");
-  mvprintw(1,60,"Hydrogenation-Cycle program [h]");
-  mvprintw(2,60,"pressure-program (empty)");
-  mvprintw(3,60,"practical demonstration (empty)");
-  while((mbef=getch()) != 10){
-	  if (mbef == 'h'){
-		  //hydrogenation;
-		  mvprintw(4,60,"pressed h");
-
-		  break;
-		  }
-	  }
-  // hier gehört dann ein getch her!!
-return 0
-}
-
-//		gelesene Werte aus Analog IN schreiben
-int refresh_val (int32_t rc,int32_t adh,uint32_t data,float u[])
-{
-  int i=0,x=0,y=0;
-  int32_t cha=0;
-  uint32_t rng=3;
-  mvprintw (0,0,"Analog IN");
-
-  for (i=0; i<=15;i++)
-    {
-      cha = i;
-      rc = ad_discrete_in(adh, AD_CHA_TYPE_ANALOG_IN|cha, rng, &data);
-      if (rc == 0)
-        rc = ad_sample_to_float (adh, AD_CHA_TYPE_ANALOG_IN|cha, rng, data, &u[i]);
-      if (rc == 0)
-      {
-	getyx(stdscr,y,x);
-        mvprintw (i+1,0,"cha %2d:", cha);
-	attron(A_BOLD);
-        mvprintw (i+1,10,"%7.3f V", u[i]);
-	attroff(A_BOLD);
-      }
-
-      else
-        printw("Fail\n");
-    }
-
-
-  return 0;
-}
-
-//		Digitale Ausgänge schreiben/aktualisieren
-int refresh_dout (int bef, int state[],uint32_t dataout, int chdi)
-{
-int rc=0,adh=0,i=0;
-
-mvprintw (0,20,"Digital OUT");
-if (state[bef-48]==0) state[bef-48]=1;
-else  state[bef-48]=0;
-	//for (i=0;i<=15;i++) printw("%d",state[i]);
-	//printw("\n");
-	dataout=btoi(state);
-        //printw("Bef: %d\n",bef);
-	//printw("\n");
-	//printw("Dataout: %d\n",dataout);
-        rc = ad_discrete_out(adh,AD_CHA_TYPE_DIGITAL_IO|chdi,0,dataout);
-        for (i=0; i<=15;i++) 
-	{ 
-	  if (state[i]==0) mvprintw (i+1,20,"Channel %2d: %d\n",i, state[i]);
-	  if (state[i]==1) mvprintw (i+1,20,"Channel %2d: %d ON",i,state[i]);
-	}
-	//printw("RC: %d\n ",rc);
-  return 0;
-}
