@@ -162,13 +162,14 @@ int main ()
     {
         move(0,0);
         attron(COLOR_PAIR(2));
-	refresh_val(rc,adh,data,u); //read values from analouge inputs (hsteuerung.h)
+	refresh_val(rc,adh,data,u); //read values from analouge inputs (bmc.cpp)
         attroff(COLOR_PAIR(2));
         attron(COLOR_PAIR(3));
-        refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (hsteuerung.h)
+        refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (bmc.cpp)
         attroff(COLOR_PAIR(3));
 	move(18,0);
 	printw("Key-Code: %d",bef);
+	mvprintw(19,0,"%7.3f %7.3f",u[2] u[3]);
 	if (bef == 'm') // press m for menu
 		{
 		 menu();
@@ -187,6 +188,22 @@ int main ()
   return 23;
 }
 
+int menu()
+{
+  char mbef;
+  mvprintw(0,50,"--MENU--");
+  mvprintw(1,60,"Hydrogenation-Cycle program [h]");
+  mvprintw(2,60,"pressure-program (empty)");
+  mvprintw(3,60,"practical demonstration (empty)");
+  while((mbef=getch()) != 10){
+	  if (mbef == 'h'){
+		  //hydrogenation;
+		  mvprintw(4,60,"pressed h");
 
+		  break;
+		  }
+	  }
+  // hier gehört dann ein getch her!!
+}
 
 

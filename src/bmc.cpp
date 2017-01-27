@@ -13,12 +13,14 @@ library für Steuerungs-relevante Funktionen
 #include <ncurses.h>
 #include "binchange.h"
 
-
+#if 0
 void initiate_screen()
 {
   
 }
+#endif
 
+#if 0
 int menu()
 {
   char mbef;
@@ -34,10 +36,9 @@ int menu()
 		  break;
 		  }
 	  }
-
   // hier gehört dann ein getch her!!
 }
-
+#endif
 
 
 
