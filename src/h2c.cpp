@@ -169,7 +169,7 @@ int main ()
         attroff(COLOR_PAIR(3));
 	move(18,0);
 	printw("Key-Code: %d",bef);
-	mvprintw(19,0,"%7.3f %7.3f",u[2] u[3]);
+	mvprintw(19,0,"%7.3f",u[2]);
 	if (bef == 'm') // press m for menu
 		{
 		 menu();
