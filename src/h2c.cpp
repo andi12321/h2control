@@ -128,7 +128,6 @@ int main ()
 {
   //char *driver;
   const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
-  int saving=0;
   int i=0,bef=0,state[15],chdi=0, saving=0;
   int32_t adh=0, rc=0;
   uint32_t data=0, dataout=0, rng=3;
