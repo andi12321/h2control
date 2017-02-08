@@ -8,6 +8,7 @@
 #include <errno.h>
 #include "libad/libad.h"
 #include <ncurses.h>
+#include <time.h>
 
 
 #if 0
@@ -127,7 +128,7 @@ int main ()
 {
   //char *driver;
   const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
-  int i=0,bef=0,state[15],chdi=0;
+  int i=0,bef=0,state[15],chdi=0, saving=0;
   int32_t adh=0, rc=0;
   uint32_t data=0, dataout=0, rng=3;
   float u[15];
@@ -135,6 +136,10 @@ int main ()
   int32_t cha;
   struct ad_range_info info;
   struct ad_device_info devinfo;
+  static const char filename[] = "doc/data";
+  FILE *fp = fopen ( filename, "w+" );
+  time_t current_time;
+  char* c_time_string;
 
 
   initscr(); 			/* Ncurses initiieren */
@@ -251,9 +256,22 @@ int main ()
 	move(18,0);
 	printw("Key-Code: %d",bef);
 	//mvprintw(19,0,"%7.3f",u[2]);
-	if (bef == 32) // press m for menu
+	if (bef == 32) // press Space for menu
 		{
-		 menu();
+		 if (saving == 0)
+		 {
+			 printw("now saving");
+			 current_time = time(NULL);
+			 c_time_string = ctime(&current_time);
+			 fprintf(fp, "Testing...\n");
+			 fprintf(fp, "Current time is %s", c_time_string);
+			 saving=1;
+		 }
+		 else if (saving == 1)
+		 {
+			 printw("saving stopped");
+			 saving=0;
+		 }
 		}
         refresh();
 	//s
@@ -265,7 +283,7 @@ int main ()
 
   refresh();
   endwin();
-  
+  fclose(fp);
   return 23;
 }
 
