@@ -9,6 +9,10 @@
 #include "libad/libad.h"
 #include <ncurses.h>
 #include <time.h>
+#include <fstream>
+#include <iostream>
+#include <sys/time.h>
+using namespace std;
 
 
 #if 0
@@ -111,7 +115,6 @@ else  state[bef-97]=0;
 	dataout=btoi(state);
         //printw("Bef: %d\n",bef);
 	//printw("\n");
-	//printw("Dataout: %d\n",dataout);
         rc = ad_discrete_out(adh,AD_CHA_TYPE_DIGITAL_IO|chdi,0,dataout);
         for (i=0; i<=15;i++) 
 	{ 
@@ -120,7 +123,7 @@ else  state[bef-97]=0;
 	  if (state[i]==1) mvprintw (i+1,20,"Channel %1c: %d ON", (char) key, state[i]);
 	}
 	//printw("RC: %d\n ",rc);
-  return 0;
+  return dataout;
 }
 
 int main ()
@@ -130,7 +133,7 @@ int main ()
   const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
   int i=0,bef=0,state[15],chdi=0, saving=0;
   int32_t adh=0, rc=0;
-  uint32_t data=0, dataout=0, rng=3;
+  uint32_t data=0, dataout=0, rng=3, print_state=0;
   float u[15];
   int32_t cnt;
   int32_t cha;
@@ -138,8 +141,15 @@ int main ()
   struct ad_device_info devinfo;
   static const char filename[] = "doc/data";
   FILE *fp = fopen ( filename, "w+" );
-  time_t current_time;
-  char* c_time_string;
+  //time_t current_time;
+  //char* c_time_string;
+  struct timeval current_time;
+  //char string[19];
+  
+ // ofstream outfile;
+  //outfile.open("doc/h2.dat");
+  //outfile << "dingsda" << endl;
+
 
 
   initscr(); 			/* Ncurses initiieren */
@@ -251,20 +261,34 @@ int main ()
 	refresh_val(rc,adh,data,u); //read values from analouge inputs (bmc.cpp)
         attroff(COLOR_PAIR(2));
         attron(COLOR_PAIR(3));
-        refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (bmc.cpp)
+        print_state = refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (bmc.cpp)
+	printw("Dataout: %d\n", print_state);
+	//string = get_state(print_state);
+	//printw(string);
         attroff(COLOR_PAIR(3));
 	move(18,0);
 	printw("Key-Code: %d",bef);
-	//mvprintw(19,0,"%7.3f",u[2]);
+	mvprintw(19,0,"%7.3f",u[2]);
+	mvprintw(20,0,"%i",dataout);
+	if (saving == 1)
+	{
+	   //current_time = time(NULL);
+	   gettimeofday(&current_time, NULL); 
+	   //c_time_string = ctime(&current_time);
+	   //outfile << "time" << endl;
+	   i = 2016;
+	   fprintf(fp, "%i.%ld ,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%i\n", current_time.tv_sec, current_time.tv_usec,u[0],u[1],u[3],u[4],u[5],u[6],u[7],u[8],u[9],u[10],u[11],u[12],u[13],u[14],u[15],print_state);
+	   //fprintf(fp,"%s;%7.3f", c_time_string, u[2]);
+	}
 	if (bef == 32) // press Space for menu
 		{
 		 if (saving == 0)
 		 {
 			 printw("now saving");
-			 current_time = time(NULL);
-			 c_time_string = ctime(&current_time);
-			 fprintf(fp, "Testing...\n");
-			 fprintf(fp, "Current time is %s", c_time_string);
+			 //current_time = time(NULL);
+			 //c_time_string = ctime(&current_time);
+			 //fprintf(fp, "Testing...\n");
+			 //fprintf(fp, "Current time is %s", c_time_string);
 			 saving=1;
 		 }
 		 else if (saving == 1)
