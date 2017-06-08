@@ -54,7 +54,7 @@ int btoi(int b[])		/* Binary-Array 0-15=1-32768  to Integer*/
     {
       if (b[i]==1)
       {
-	a=a+pow(2,i);
+        a=a+pow(2,i);
       }
     }
   return a;  
