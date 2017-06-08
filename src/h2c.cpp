@@ -3,7 +3,7 @@
 //#include "bmc.h"
 //#include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 //#include <ctype.h>
 #include <errno.h>
 #include "libad/libad.h"
@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <sys/time.h>
+#include <bitset>
 using namespace std;
 
 
@@ -131,7 +132,7 @@ int main ()
 {
   //char *driver;
   const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
-  int i=0,bef=0,state[15],chdi=0, saving=0;
+  int i=0,bef=0,state[16],chdi=0, saving=0;
   int32_t adh=0, rc=0;
   uint32_t data=0, dataout=0, rng=3, print_state=0;
   float u[15];
@@ -262,9 +263,10 @@ int main ()
         attroff(COLOR_PAIR(2));
         attron(COLOR_PAIR(3));
         print_state = refresh_dout(bef,state,dataout,chdi); //Digital-Out Values schreiben (bmc.cpp)
-	printw("Dataout: %d\n", print_state);
+	string string_state = to_string(print_state);
+	printw("Dataout: %i%i%i%i %i%i%i%i %i%i%i%i %i%i%i%i\n", state[0], state[1], state[2], state[3], state[4], state[5], state[6], state[7], state[8], state[9], state[10], state[11], state[12], state[13], state[14], state[15]);
 	//string = get_state(print_state);
-	//printw(string);
+	//printw(get_state(print_state));
         attroff(COLOR_PAIR(3));
 	move(18,0);
 	printw("Key-Code: %d",bef);
@@ -277,8 +279,12 @@ int main ()
 	   //c_time_string = ctime(&current_time);
 	   //outfile << "time" << endl;
 	   i = 2016;
-	   fprintf(fp, "%i.%ld ,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%i\n", current_time.tv_sec, current_time.tv_usec,u[0],u[1],u[3],u[4],u[5],u[6],u[7],u[8],u[9],u[10],u[11],u[12],u[13],u[14],u[15],print_state);
-	   //fprintf(fp,"%s;%7.3f", c_time_string, u[2]);
+	   std::cout << "Input the number for " << u[0] << " =";
+	   //fprintf(fp, "%i.%ld ,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%d\n", current_time.tv_sec, current_time.tv_usec,u[0],u[1],u[3],u[4],u[5],u[6],u[7],u[8],u[9],u[10],u[11],u[12],u[13],u[14],u[15],string_state.c_str());
+	   fprintf(fp, "%i.%ld ,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f,%7.3f\n", current_time.tv_sec, current_time.tv_usec,u[0],u[1],u[3],u[4],u[5],u[6],u[7],u[8],u[9],u[10],u[11],u[12],u[13],u[14]);
+	   //fprintf(fp, "%i.%ld", current_time.tv_sec);
+	   fflush(fp);
+	   //fprintf(f/p,"%s;%7.3f", c_time_string, u[2]);
 	}
 	if (bef == 32) // press Space for menu
 		{

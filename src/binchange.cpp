@@ -26,7 +26,6 @@ void itob(int a,int b[])		/* Integer to Binary-Array 0-15=1-32768 */
       else b[i]=0;
     }
 }
-
 #if 0
 char *get_state(int a)		/* Integer to Binary-Array 0-15=1-32768 */
 {
