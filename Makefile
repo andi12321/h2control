@@ -15,7 +15,7 @@ CFLAGS := -m32 -std=c++0x # -Wall
 # LIB := -pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
 LIBS = \
   -lad4
-LIB := -lad4 -lm -lncurses
+LIB := -lad4 -lm -lncurses -lrt
 INC := -I../../include
 
 $(TARGET): $(OBJECTS)
