@@ -74,6 +74,28 @@ int refresh_dout (int bef, int funcstate[], uint32_t dataout, int chdi)
 //-----------------------------------------------------------------------------------------------------------
 int main (int argc, char* argv[])
 {
+    printf("check");
+    if (argc < 2) {
+        // Tell the user how to run the program
+        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+        /* "Usage messages" are a conventional way of telling the user
+         * how to run a program if they enter the command incorrectly.
+         */
+        return 1;
+    }
+    
+    std::string command ("cp ");
+    std::string temp_filename ("");
+    temp_filename += argv[1];           // character
+    temp_filename += "_temp";           // character
+    
+    command += argv[1];         // c-string
+    command += " ";         // string
+    command += temp_filename;           // character
+    
+    std::cout << command << std::endl;
+    system(command.c_str());
+    
     using namespace std::this_thread; // sleep_for, sleep_until
     using namespace std::chrono; // nanoseconds, system_clock, seconds
     const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
@@ -88,9 +110,107 @@ int main (int argc, char* argv[])
     struct ad_device_info devinfo;
     struct timeval current_time;
     struct timespec time_before, time_after;
-    FILE *fp = fopen ( argv[1], "w+" );
-    fprintf(fp,"File created at %s\n",argv[1]);
-    fflush(fp);
+    //FILE *temp_file = fopen (temp_filename.c_str(), "a+");
+    FILE *fp = fopen("doc/data", "w+");
+    int cycles, elements;
+    string filename;
+    struct procedure_datastructure{
+        int run[20], dur[20];
+        int state[20][15];
+    } procedure;
+    //char c;
+    //std::cin >>c ;
+    //std::cout <<"the value of '"<<c<<"' is "<<int(c)<<'\n';
+
+
+    string line;
+    ifstream temp(temp_filename.c_str());
+    while (getline(temp, line))
+    {
+        cout << "READ ---------------" << line << endl;
+        switch(line[0])
+        {
+        case 'G':   
+        cycles = atoi(line.substr(2,4).c_str());
+        cout << "Cycles: " << cycles << endl;
+        break;
+
+        case 'F':   
+        filename = line.substr(2,40);
+        cout << "Filename: " << filename << "|" << endl;
+        break;
+
+        case 'E':
+        elements = atoi(line.substr(2,3).c_str());
+        cout << "Elements: " << elements << endl;
+        break;
+        
+        case 'R':
+        procedure.run[atoi(line.substr(48,1).c_str())]=atoi(line.substr(2,5).c_str());
+        procedure.dur[atoi(line.substr(48,1).c_str())]=atoi(line.substr(8,4).c_str());
+
+        procedure.state[atoi(line.substr(48,1).c_str())][0] = atoi(line.substr(13,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][1] = atoi(line.substr(14,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][2] = atoi(line.substr(15,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][3] = atoi(line.substr(16,1).c_str());
+
+        procedure.state[atoi(line.substr(48,1).c_str())][4] = atoi(line.substr(18,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][5] = atoi(line.substr(19,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][6] = atoi(line.substr(20,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][7] = atoi(line.substr(21,1).c_str());
+
+        procedure.state[atoi(line.substr(48,1).c_str())][8] = atoi(line.substr(23,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][9] = atoi(line.substr(24,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][10] = atoi(line.substr(25,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][11] = atoi(line.substr(26,1).c_str());
+
+        procedure.state[atoi(line.substr(48,1).c_str())][12] = atoi(line.substr(28,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][13] = atoi(line.substr(29,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][14] = atoi(line.substr(30,1).c_str());
+        procedure.state[atoi(line.substr(48,1).c_str())][15] = atoi(line.substr(31,1).c_str());
+        
+
+        for (i=0;i<=15;i++)
+        {
+            cout <<  procedure.state[atoi(line.substr(48,1).c_str())][i];
+        }
+        cout << endl;                   
+        break;
+        }
+
+    }
+
+
+
+//-----------------------------------------------------------------------------------------------------------
+//---------------------------------  Main Loop   ------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
+    for (int cycle_counter=1; cycle_counter<=cycles;cycle_counter++)
+    {
+        cout << "Cycle " << cycle_counter << endl;
+        for (int element_counter=1; element_counter<=elements;element_counter++)
+        {
+            cout << "Element...  " << element_counter << endl;
+            for (int unit_counter=0; unit_counter<=procedure.run[element_counter]; unit_counter++)
+            {
+                cout << "Unit " << unit_counter << " @ " << procedure.dur[element_counter] << endl; 
+            }
+        }
+    }
+
+
+
+#if 0
+    char line[100];
+    //char a[1],b[1],c[1],d[1];
+    if (fgets (line, 100, temp_file) != NULL)
+        {
+        printf("%c%c%c%c\n",line[1],line[2],line[3],line[4]);
+        }
+#endif    
+    //printf("Dur: %i\n", duration);
+    //printf("%c\n", c);
+    return 0;
 
     initscr(); 			/* Ncurses initiieren */
     noecho();
