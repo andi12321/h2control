@@ -81,7 +81,7 @@ int main (int argc, char* argv[])
     
     std::cout << command << std::endl;
     system(command.c_str());
-    
+
     const char *driver = "lanbase:131.130.31.144";  /* BMCM - Gerät initiieren */
     int i=0,bef=0, chdi=0, saving=0, error, refreshtime=1000 ;
     int32_t adh=0, rc=0;
@@ -157,7 +157,7 @@ int main (int argc, char* argv[])
     }
 
     FILE *fp = fopen(filename.c_str(), "w+");
-    //FILE *lf = fopen(log_filename.c_str(), "w+");
+    FILE *lf = fopen(log_filename.c_str(), "w+");
 
 #if 0
     ofstream lf;
@@ -200,6 +200,9 @@ adh = ad_open(driver);
     for (int cycle_counter=1; cycle_counter<=cycles;cycle_counter++)
     {
         //lf << "Cycle " << cycle_counter << endl;
+        gettimeofday(&current_time, NULL);
+        fprintf(lf, "<%i> -- Cycle %i\n",current_time.tv_sec, cycle_counter);
+        fflush(lf);
         for (int element_counter=1; element_counter<=elements;element_counter++)
         {
             for (i=0;i<=15;i++)
@@ -229,8 +232,10 @@ adh = ad_open(driver);
 ende:
     dataout=0;
     rc = ad_discrete_out(adh,AD_CHA_TYPE_DIGITAL_IO|chdi,0,dataout);
+    
+    fprintf(lf,"Closed");
     fclose(fp);
-    //lf << "Closed";
+    fclose(lf);
     return 23;
 }
 
